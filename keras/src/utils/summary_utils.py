@@ -95,8 +95,8 @@ def format_layer_shape(layer):
     # 2. Using `layer._build_shapes_dict`, which is possible if users manually
     # build the layer.
     if len(layer._inbound_nodes) > 0:
-        for i in range(len(layer._inbound_nodes)):
-            outputs = layer._inbound_nodes[i].output_tensors
+        for node in layer._inbound_nodes:
+            outputs = node.output_tensors
             output_shapes = tree.map_structure(
                 lambda x: format_shape(x.shape), outputs
             )
@@ -307,9 +307,9 @@ def print_summary(
         if expand_nested and hasattr(layer, "layers") and layer.layers:
             nested_layers = layer.layers
             nested_level += 1
-            for i in range(len(nested_layers)):
+            for nested_layer in nested_layers:
                 rows.extend(
-                    print_layer(nested_layers[i], nested_level=nested_level)
+                    print_layer(nested_layer, nested_level=nested_level)
                 )
         return rows
 
